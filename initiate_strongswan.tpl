@@ -1,7 +1,8 @@
 #!/bin/bash
 
-apt-get update
-apt-get install strongswan
-wget -O /sbin/ipsec.sh https://docs.openvpn.net/wp-content/uploads/ipsec.sh
-wget -O /etc/ipsec.conf https://docs.openvpn.net/wp-content/uploads/ipsec.conf
-wget -O /etc/ipsec.secrets https://docs.openvpn.net/wp-content/uploads/ipsec.secrets
+apt-get update -y
+apt-get install strongswan strongswan-starter -y
+echo 'net.ipv4.ip_forward=1' >> /etc/sysctl.conf
+echo 'net.ipv4.conf.all.send_redirects=0' >> /etc/sysctl.conf
+echo 'net.ipv4.conf.all.accept_redirects=0' >> /etc/sysctl.conf
+sysctl -p /etc/sysctl.conf

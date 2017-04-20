@@ -11,24 +11,11 @@ conn tunnel_1
   authby=secret
   auto=start
   type=tunnel
-  left=10.0.0.101
-  leftid=35.167.122.17
+  left=<%= ENV['LOCAL_IP'] %>
+  leftid=<%= ENV['PUBLIC_LEFT_IP'] %>
   leftsubnet=10.0.0.0/24
   leftauth=psk
-  right=35.162.8.165
-  rightsubnet=10.0.1.0/24
-  rightauth=psk
-  ike=aes128-sha1-modp1024
-  esp=aes128-sha1-modp1024
-conn tunnel_2
-  authby=secret
-  auto=start
-  type=tunnel
-  left=10.0.0.101
-  leftid=35.167.122.17
-  leftsubnet=10.0.0.0/24
-  leftauth=psk
-  right=52.32.255.36
+  right=<%= ENV['PUBLIC_RIGHT_IP'] %>
   rightsubnet=10.0.1.0/24
   rightauth=psk
   ike=aes128-sha1-modp1024
