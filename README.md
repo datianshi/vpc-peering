@@ -27,7 +27,7 @@
 
    * Route on VPC2 -> VM routes through vpn gateway for VPC1 subnet
 
-   ![vpc1_key_route](images/vpc1_key_route.png)
+   ![vpc1_key_route](images/vpc2_key_route.png)
 
 ## Run
 
