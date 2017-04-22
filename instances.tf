@@ -11,7 +11,6 @@ resource "aws_instance" "strongswan" {
     key_name = "${var.aws_key_name}"
     vpc_security_group_ids = ["${aws_security_group.peering.id}"]
     subnet_id = "${aws_subnet.public_subnet_vpc1.id}"
-    associate_public_ip_address = true
     source_dest_check = false
     user_data = "${data.template_file.strongswan_user_data.rendered}"
     root_block_device {
@@ -28,8 +27,8 @@ resource "aws_instance" "test_machine_vpc1" {
     instance_type = "${var.strongswan_instance_type}"
     key_name = "${var.aws_key_name}"
     vpc_security_group_ids = ["${aws_security_group.regular_ssh_1.id}"]
-    subnet_id = "${aws_subnet.public_subnet_vpc1.id}"
-    associate_public_ip_address = true
+    subnet_id = "${aws_subnet.private_subnet_vpc1.id}"
+    associate_public_ip_address = false
     root_block_device {
         volume_size = 20
     }
@@ -45,8 +44,8 @@ resource "aws_instance" "test_machine_vpc2" {
     instance_type = "${var.strongswan_instance_type}"
     key_name = "${var.aws_key_name}"
     vpc_security_group_ids = ["${aws_security_group.regular_ssh_2.id}"]
-    subnet_id = "${aws_subnet.public_subnet_vpc2.id}"
-    associate_public_ip_address = true
+    subnet_id = "${aws_subnet.private_subnet_vpc2.id}"
+    associate_public_ip_address = false
     root_block_device {
         volume_size = 20
     }
@@ -55,6 +54,20 @@ resource "aws_instance" "test_machine_vpc2" {
     }
 }
 
+resource "aws_instance" "nat" {
+    ami = "${var.nat_instance_ami}"
+    availability_zone = "${var.az}"
+    instance_type = "${var.strongswan_instance_type}"
+    key_name = "${var.aws_key_name}"
+    vpc_security_group_ids = ["${aws_security_group.regular_ssh_2.id}"]
+    subnet_id = "${aws_subnet.public_subnet_vpc2.id}"
+    associate_public_ip_address = true
+    source_dest_check = false
+
+    tags {
+        Name = "Nat Instance"
+    }
+}
 
 resource "aws_eip" "eip" {
   vpc = true
