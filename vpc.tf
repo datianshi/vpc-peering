@@ -35,3 +35,18 @@ resource "aws_vpn_gateway" "vpn_gw" {
     Name = "vpn_gateway_vpc2"
   }
 }
+
+resource "aws_vpc" "vpc3" {
+    cidr_block = "${var.vpc3_cidr}"
+    enable_dns_hostnames = true
+    tags {
+        Name = "vpc2"
+    }
+}
+
+resource "aws_internet_gateway" "internetGw3" {
+    vpc_id = "${aws_vpc.vpc3.id}"
+    tags {
+        Name = "vpc3-internet-gateway"
+    }
+}

@@ -91,6 +91,12 @@ resource "aws_security_group" "regular_ssh_2" {
         cidr_blocks = ["0.0.0.0/0"]
     }
     ingress {
+        from_port = 80
+        to_port = 80
+        protocol = "tcp"
+        cidr_blocks = ["0.0.0.0/0"]
+    }    
+    ingress {
         from_port = 0
         to_port = 0
         protocol = -1
@@ -114,6 +120,73 @@ resource "aws_security_group" "elb" {
     ingress {
         from_port = 22
         to_port = 22
+        protocol = "tcp"
+        cidr_blocks = ["0.0.0.0/0"]
+    }
+    ingress {
+        from_port = 80
+        to_port = 80
+        protocol = "tcp"
+        cidr_blocks = ["0.0.0.0/0"]
+    }
+    egress {
+        from_port = 0
+        to_port = 0
+        protocol = -1
+        cidr_blocks = ["0.0.0.0/0"]
+    }
+}
+
+
+resource "aws_security_group" "regular_ssh_3" {
+    name = "vpc3 for test"
+    description = "Test VMs"
+    vpc_id = "${aws_vpc.vpc3.id}"
+    tags {
+        Name = "regular ssh"
+    }
+    ingress {
+        from_port = 22
+        to_port = 22
+        protocol = "tcp"
+        cidr_blocks = ["0.0.0.0/0"]
+    }
+    ingress {
+        from_port = 80
+        to_port = 80
+        protocol = "tcp"
+        cidr_blocks = ["0.0.0.0/0"]
+    }
+    ingress {
+        from_port = 0
+        to_port = 0
+        protocol = -1
+        cidr_blocks = ["${var.vpc2_cidr}","${var.vpc3_cidr}"]
+    }
+    egress {
+        from_port = 0
+        to_port = 0
+        protocol = -1
+        cidr_blocks = ["0.0.0.0/0"]
+    }
+}
+
+resource "aws_security_group" "elb_tenant" {
+    name = "elb security group"
+    description = "elb security group"
+    vpc_id = "${aws_vpc.vpc3.id}"
+    tags {
+        Name = "ELB"
+    }
+    ingress {
+        from_port = 22
+        to_port = 22
+        protocol = "tcp"
+        cidr_blocks = ["0.0.0.0/0"]
+    }
+    ingress {
+        from_port = 80
+        to_port = 80
         protocol = "tcp"
         cidr_blocks = ["0.0.0.0/0"]
     }

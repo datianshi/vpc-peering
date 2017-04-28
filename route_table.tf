@@ -45,6 +45,11 @@ resource "aws_route_table" "PublicSubnetTB2" {
         gateway_id = "${aws_vpn_gateway.vpn_gw.id}"
     }
 
+    route {
+        cidr_block = "${var.vpc3_cidr}"
+        vpc_peering_connection_id = "${aws_vpc_peering_connection.provider_tenant.id}"
+    }
+
 
     tags {
         Name = "public subnet route table2"
@@ -61,5 +66,49 @@ resource "aws_route_table" "PrivateSubnetTB2" {
 
     tags {
         Name = "private subnet route table2"
+    }
+}
+
+resource "aws_route_table" "PublicSubnetTB3" {
+    vpc_id = "${aws_vpc.vpc3.id}"
+
+    route {
+        cidr_block = "0.0.0.0/0"
+        gateway_id = "${aws_internet_gateway.internetGw3.id}"
+    }
+
+    route {
+        cidr_block = "${var.vpc2_cidr}"
+        vpc_peering_connection_id = "${aws_vpc_peering_connection.provider_tenant.id}"
+    }
+
+    route {
+        cidr_block = "${var.vpc1_cidr}"
+        vpc_peering_connection_id = "${aws_vpc_peering_connection.provider_tenant.id}"
+    }
+    
+
+    tags {
+        Name = "public subnet route table3"
+    }
+}
+
+resource "aws_route_table" "PrivateSubnetTB3" {
+    vpc_id = "${aws_vpc.vpc3.id}"
+
+    route {
+        cidr_block = "${var.vpc2_cidr}"
+        vpc_peering_connection_id = "${aws_vpc_peering_connection.provider_tenant.id}"
+    }
+
+    route {
+        cidr_block = "${var.vpc1_cidr}"
+        vpc_peering_connection_id = "${aws_vpc_peering_connection.provider_tenant.id}"
+    }
+
+
+
+    tags {
+        Name = "private subnet route table3"
     }
 }

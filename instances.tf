@@ -65,9 +65,42 @@ resource "aws_instance" "nat" {
     source_dest_check = false
 
     tags {
-        Name = "Nat Instance"
+        Name = "Nat Instance provider"
     }
 }
+
+resource "aws_instance" "nat_tenant" {
+    ami = "${var.nat_instance_ami}"
+    availability_zone = "${var.az}"
+    instance_type = "${var.strongswan_instance_type}"
+    key_name = "${var.aws_key_name}"
+    vpc_security_group_ids = ["${aws_security_group.regular_ssh_3.id}"]
+    subnet_id = "${aws_subnet.public_subnet_vpc3.id}"
+    associate_public_ip_address = true
+    source_dest_check = false
+
+    tags {
+        Name = "Nat Instance tenant"
+    }
+}
+
+resource "aws_instance" "test_machine_vpc3" {
+    ami = "${var.nginx_instance_ami}"
+    availability_zone = "${var.az}"
+    instance_type = "t2.micro"
+    key_name = "${var.aws_key_name}"
+    vpc_security_group_ids = ["${aws_security_group.regular_ssh_3.id}"]
+    subnet_id = "${aws_subnet.private_subnet_vpc3.id}"
+    associate_public_ip_address = false
+    root_block_device {
+        volume_size = 20
+    }
+    tags {
+        Name = "vpc3_test"
+    }
+}
+
+
 
 resource "aws_eip" "eip" {
   vpc = true
